@@ -263,7 +263,7 @@ class UserDeprovisioningApp {
                 }
                 
                 const successCount = Object.values(data).filter(Boolean).length;
-                const totalTests = 4; // graph, ad, service, ou
+                const totalTests = 5; // graph, ad, service, ou
                 
                 this.addLogEntry(
                     `Connection tests completed: ${successCount}/${totalTests} successful`,
@@ -637,7 +637,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Auto-populate test email if none present
     const emailInput = document.getElementById('userEmail');
     if (emailInput && !emailInput.value.trim()) {
-        emailInput.value = 'Anthony.DiSilvestro@boldt.com';
+        emailInput.value = 'First.Last@Domain.com';
         app.validateForm();
     }
     

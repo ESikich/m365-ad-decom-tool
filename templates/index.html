@@ -1,1550 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Deprovisioning Tool</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            line-height: 1.6;
-        }
-
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-        }
-
-
-        .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-            color: white;
-            padding: 40px;
-            text-align: center;
-        }
-
-
-        .header h1 {
-            font-size: 2.8em;
-            margin-bottom: 15px;
-            font-weight: 300;
-        }
-
-
-        .form-section {
-            padding: 40px;
-        }
-
-
-        .config-section {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-
-
-        .config-item {
-            margin-bottom: 12px;
-            font-size: 0.95em;
-            color: #856404;
-        }
-
-
-        .config-item.success {
-            color: #155724;
-            background: #d4edda;
-            padding: 8px 12px;
-            border-radius: 4px;
-        }
-
-
-        .config-item.error {
-            color: #721c24;
-            background: #f8d7da;
-            padding: 8px 12px;
-            border-radius: 4px;
-        }
-
-
-        .credentials-section {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-
-
-        .credentials-section h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 1.4em;
-        }
-
-
-        .credentials-info {
-            color: #6c757d;
-            margin-bottom: 25px;
-            font-size: 1.05em;
-        }
-
-
-        .credentials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 30px;
-        }
-
-
-        .credential-group {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            border: 1px solid #dee2e6;
-        }
-
-
-        .credential-group h4 {
-            color: #495057;
-            margin-bottom: 20px;
-            font-size: 1.2em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-
-        .warning-banner {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            color: white;
-            padding: 25px;
-            margin: 25px 0;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-
-        .input-group {
-            margin-bottom: 25px;
-        }
-
-
-        .input-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #2c3e50;
-            font-size: 1.05em;
-        }
-
-
-        .input-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e6ed;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-
-        .input-group input:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
-
-
-        .input-group small {
-            color: #6c757d;
-            font-size: 0.9em;
-            margin-top: 5px;
-            display: block;
-        }
-
-
-        .actions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-
-        .action-category {
-            border: 2px solid #e0e6ed;
-            border-radius: 12px;
-            background: #fafbfc;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-
-        .action-category:hover {
-            border-color: #3498db;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.15);
-        }
-
-
-        .category-header {
-            display: flex;
-            align-items: center;
-            padding: 20px 25px;
-            background: #f8f9fa;
-            border-bottom: 2px solid #e0e6ed;
-            cursor: pointer;
-        }
-
-
-        .category-icon {
-            font-size: 2.2em;
-            margin-right: 15px;
-        }
-
-
-        .category-info {
-            flex-grow: 1;
-        }
-
-
-        .category-title {
-            font-size: 1.3em;
-            font-weight: 600;
-            color: #2c3e50;
-            display: block;
-        }
-
-
-        .category-subtitle {
-            font-size: 0.9em;
-            color: #6c757d;
-        }
-
-
-        .toggle-switch {
-            position: relative;
-            width: 60px;
-            height: 32px;
-            background-color: #ccc;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-left: 15px;
-        }
-
-
-        .toggle-switch.active {
-            background-color: #3498db;
-        }
-
-
-        .toggle-slider {
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 26px;
-            height: 26px;
-            background-color: white;
-            border-radius: 50%;
-            transition: transform 0.3s;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-
-        .toggle-switch.active .toggle-slider {
-            transform: translateX(28px);
-        }
-
-
-        .checkbox-list {
-            padding: 20px 25px;
-            transition: all 0.5s ease;
-        }
-
-
-        .checkbox-list.disabled {
-            opacity: 0.4;
-        }
-
-
-        .checkbox-item {
-            display: flex;
-            align-items: flex-start;
-            padding: 15px;
-            margin-bottom: 12px;
-            border: 1px solid #e0e6ed;
-            border-radius: 8px;
-            background: white;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-
-        .checkbox-item:hover {
-            border-color: #3498db;
-            background: #f0f8ff;
-            transform: translateX(3px);
-        }
-
-
-        .checkbox-item.critical::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: #e74c3c;
-            border-radius: 4px 0 0 4px;
-        }
-
-
-        .checkbox-item.high::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: #e67e22;
-            border-radius: 4px 0 0 4px;
-        }
-
-
-        .checkbox-item.medium::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: #f39c12;
-            border-radius: 4px 0 0 4px;
-        }
-
-
-        .checkbox-item input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            margin-right: 15px;
-            margin-top: 2px;
-            accent-color: #3498db;
-        }
-
-
-        .action-name {
-            font-weight: 600;
-            color: #2c3e50;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-
-        .action-desc {
-            font-size: 0.9em;
-            color: #6c757d;
-            line-height: 1.4;
-        }
-
-
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin: 40px 0 30px;
-            flex-wrap: wrap;
-        }
-
-
-        .btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            min-width: 180px;
-        }
-
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-
-        .btn-primary {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            color: white;
-        }
-
-
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 25px rgba(231, 76, 60, 0.4);
-        }
-
-
-        .btn-test {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-        }
-
-
-        .btn-test:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 25px rgba(52, 152, 219, 0.4);
-        }
-
-
-        .btn-secondary {
-            background: #95a5a6;
-            color: white;
-        }
-
-
-        .btn-secondary:hover:not(:disabled) {
-            background: #7f8c8d;
-            transform: translateY(-2px);
-        }
-
-
-        .progress-container {
-            margin: 30px 0;
-        }
-
-
-        .progress-bar {
-            width: 100%;
-            height: 10px;
-            background: #e0e6ed;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #3498db, #27ae60);
-            width: 0%;
-            transition: width 0.8s ease;
-        }
-
-
-        .progress-text {
-            text-align: center;
-            margin-top: 10px;
-            font-weight: 500;
-            color: #2c3e50;
-        }
-
-
-        .log-section {
-            background: #f8fafc;
-            border-top: 1px solid #e0e6ed;
-        }
-
-
-        .log-header {
-            padding: 25px 40px 15px;
-            font-size: 1.4em;
-            font-weight: 600;
-            color: #2c3e50;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 2px solid #e0e6ed;
-        }
-
-
-        .log-container {
-            max-height: 500px;
-            overflow-y: auto;
-            padding: 20px 40px 40px;
-            font-family: 'Courier New', monospace;
-        }
-
-
-        .log-entry {
-            padding: 12px 20px;
-            margin-bottom: 8px;
-            border-radius: 6px;
-            font-size: 14px;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            border-left: 4px solid transparent;
-            animation: slideIn 0.3s ease;
-        }
-
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-
-        .log-info {
-            background: #e3f2fd;
-            border-left-color: #2196f3;
-        }
-
-
-        .log-success {
-            background: #e8f5e8;
-            border-left-color: #4caf50;
-        }
-
-
-        .log-error {
-            background: #ffebee;
-            border-left-color: #f44336;
-        }
-
-
-        .log-warning {
-            background: #fff3e0;
-            border-left-color: #ff9800;
-        }
-
-
-        .status-icon {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            margin-top: 2px;
-        }
-
-
-        .icon-info { background: #2196f3; }
-        .icon-success { background: #4caf50; }
-        .icon-error { background: #f44336; }
-        .icon-warning { background: #ff9800; }
-
-
-        .timestamp {
-            color: #666;
-            font-weight: bold;
-            min-width: 80px;
-        }
-
-
-        .message {
-            flex: 1;
-        }
-
-
-        .password-output {
-            background: #2c3e50;
-            color: #ecf0f1;
-            padding: 25px;
-            border-radius: 8px;
-            margin-top: 20px;
-            font-family: 'Courier New', monospace;
-            border: 2px solid #27ae60;
-        }
-
-
-        .password-label {
-            color: #3498db;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-
-        .password-value {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #27ae60;
-            background: rgba(39, 174, 96, 0.1);
-            padding: 10px;
-            border-radius: 4px;
-            margin: 10px 0;
-        }
-
-
-        /* Modal */
-        .modal {
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            max-width: 600px;
-            width: 90%;
-        }
-
-
-        .modal-header {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            color: white;
-            padding: 25px;
-            text-align: center;
-            border-radius: 12px 12px 0 0;
-        }
-
-
-        .modal-body {
-            padding: 30px;
-        }
-
-
-        .modal-body .user-email {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            color: #2c3e50;
-            margin: 15px 0;
-        }
-
-
-        .auth-details {
-            background: #f0f8ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-        }
-
-
-        .warning-box {
-            background: #ffebee;
-            border: 2px solid #e74c3c;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: center;
-            color: #c62828;
-        }
-
-
-        .modal-body input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e6ed;
-            border-radius: 8px;
-            font-size: 16px;
-            margin-top: 10px;
-            text-align: center;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-
-        .modal-footer {
-            padding: 20px 30px;
-            border-top: 1px solid #e0e6ed;
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-        }
-
-
-        .modal-footer .btn {
-            flex: 1;
-            min-width: auto;
-        }
-
-
-        @media (max-width: 768px) {
-            .actions-grid {
-                grid-template-columns: 1fr;
-            }
-            .credentials-grid {
-                grid-template-columns: 1fr;
-            }
-            .form-section {
-                padding: 20px;
-            }
-            .action-buttons {
-                flex-direction: column;
-            }
-        }
-    </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>User Deprovisioning Tool</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🔒 User Deprovisioning Tool</h1>
-            <p>Simple credential-based account restriction tool</p>
-        </div>
+	<div class="container">
+    	<div class="header">
+        	<h1>🔒 User Deprovisioning Tool</h1>
+        	<p>Simple credential-based account restriction tool</p>
+    	</div>
 
 
-        <div class="form-section">
-            <!-- Configuration Status -->
-            <div class="config-section">
-                <h3>⚙️ System Configuration Status</h3>
-                {% if config_status.is_configured %}
-                    <div class="config-item success">✅ All required configuration present</div>
-                {% else %}
-                    <div class="config-item error">❌ Missing configuration fields:</div>
-                    {% for field in config_status.missing_fields %}
-                        <div class="config-item error">  • {{ field }}</div>
-                    {% endfor %}
-                    <div class="config-item warning">⚠️ Please configure environment variables before using</div>
-                {% endif %}
-                
-                <div class="config-item">📊 Microsoft 365: <span id="graphStatus">✅ Authenticated via OAuth</span></div>
-                <div class="config-item">🏢 AD Server: <span id="adStatus">Ready to test with credentials</span></div>
-                <div class="config-item">👤 Authentication: <span id="serviceStatus">OAuth + AD credentials</span></div>
-                <div class="config-item">📁 Terminated OU: <span id="ouStatus">Ready to test</span></div>
-            </div>
+    	<div class="form-section">
+        	<!-- Compact Top Section -->
+        	<div class="top-section">
+            	<!-- Status Bar -->
+            	<div class="status-bar">
+                	<span class="status-item">☁️ M365: <span id="graphStatus">✅ {{ config_status.user_name }}</span></span>
+                	<span class="status-item">🏢 AD: <span id="adStatus">Ready</span></span>
+                	<span class="status-item">🔧 Service: <span id="serviceStatus">Ready</span></span>
+                	<span class="status-item">📁 OU: <span id="ouStatus">Ready</span></span>
+                	<a href="{{ url_for('logout') }}" class="logout-link">🚪 Logout</a>
+            	</div>
+           	 
+            	<!-- Input Row -->
+            	<div class="input-row">
+                	<div class="input-group">
+                    	<label for="userEmail">🎯 Target User</label>
+                    	<input type="email" id="userEmail" placeholder="user@domain.com" required>
+                	</div>
+                	<div class="input-group">
+                    	<label for="adUsername">👤 AD Username</label>
+                    	<input type="text" id="adUsername" placeholder="username or user@domain.com" required>
+                	</div>
+                	<div class="input-group">
+                    	<label for="adPassword">🔑 AD Password</label>
+                    	<input type="password" id="adPassword" placeholder="Your AD password" required>
+                	</div>
+            	</div>
+        	</div>
 
 
-            <!-- Credentials Section (Only AD now - M365 via OAuth) -->
-            <div class="credentials-section">
-                <h3>🔐 Active Directory Credentials</h3>
-                <p class="credentials-info">
-                    Microsoft 365 authentication is handled via OAuth login. 
-                    Enter your Active Directory credentials below for on-premises operations.
-                    These credentials are used only for this session and are not stored.
-                </p>
-                
-                <div class="credentials-grid">
-                    <div class="credential-group">
-                        <h4>🏢 Active Directory Credentials</h4>
-                        <div class="input-group">
-                            <label for="adUsername">👤 AD Username</label>
-                            <input type="text" id="adUsername" placeholder="username or user@domain.com" required>
-                            <small>Your Active Directory username</small>
-                        </div>
-                        <div class="input-group">
-                            <label for="adPassword">🔑 AD Password</label>
-                            <input type="password" id="adPassword" placeholder="Your AD password" required>
-                            <small>Your current Active Directory password</small>
-                        </div>
-                    </div>
-                    
-                    <div class="credential-group">
-                        <h4>☁️ Microsoft 365 Status</h4>
-                        <div style="padding: 20px; text-align: center;">
-                            <div id="m365Status" style="font-size: 1.2em; margin-bottom: 15px;">
-                                ✅ Authenticated as: {{ config_status.user_name }}
-                            </div>
-                            <div style="color: #6c757d; font-size: 0.95em; margin-bottom: 15px;">
-                                {{ config_status.user_email }}
-                            </div>
-                            <a href="{{ url_for('logout') }}" style="color: #e74c3c; text-decoration: none; font-weight: 600;">
-                                🚪 Logout from Microsoft 365
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        	<!-- Action Categories -->
+        	<div class="actions-grid">
+            	<div class="action-category">
+                	<div class="category-header" onclick="toggleCategory('ad')">
+                    	<span class="category-icon">🏢</span>
+                    	<span class="category-title">Active Directory</span>
+                    	<div class="toggle-switch active" id="adToggle">
+                        	<div class="toggle-slider"></div>
+                    	</div>
+                	</div>
+                	<div class="checkbox-list" id="adActions">
+                    	<label class="checkbox-item critical">
+                        	<input type="checkbox" id="disableAD" checked>
+                        	<span class="action-name">Disable Account</span>
+                    	</label>
+                    	<label class="checkbox-item critical">
+                        	<input type="checkbox" id="expireAD" checked>
+                        	<span class="action-name">Set Expiration</span>
+                    	</label>
+                    	<label class="checkbox-item high">
+                        	<input type="checkbox" id="resetADPassword" checked>
+                        	<span class="action-name">Reset Password</span>
+                    	</label>
+                	</div>
+            	</div>
 
 
-            <!-- Warning Banner -->
-            <div class="warning-banner">
-                ⚠️ <strong>CRITICAL WARNING:</strong> This tool performs permanent, irreversible changes to user accounts. 
-                Ensure proper authorization and testing before use in production environments.
-            </div>
+            	<div class="action-category">
+                	<div class="category-header" onclick="toggleCategory('m365')">
+                    	<span class="category-icon">☁️</span>
+                    	<span class="category-title">Microsoft 365</span>
+                    	<div class="toggle-switch active" id="m365Toggle">
+                        	<div class="toggle-slider"></div>
+                    	</div>
+                	</div>
+                	<div class="checkbox-list" id="m365Actions">
+                    	<label class="checkbox-item critical">
+                        	<input type="checkbox" id="disableM365" checked>
+                        	<span class="action-name">Disable Account</span>
+                    	</label>
+                    	<label class="checkbox-item high">
+                        	<input type="checkbox" id="revokeSessions" checked>
+                        	<span class="action-name">Revoke Sessions</span>
+                    	</label>
+                	</div>
+            	</div>
 
 
-            <!-- User Input -->
-            <div class="input-group">
-                <label for="userEmail">🎯 Target User Email Address</label>
-                <input type="email" id="userEmail" placeholder="user@domain.com" required 
-                       pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
-                <small>Enter the email address of the user account to be deprovisioned</small>
-            </div>
+            	<div class="action-category">
+                	<div class="category-header" onclick="toggleCategory('mfa')">
+                    	<span class="category-icon">🛡️</span>
+                    	<span class="category-title">MFA & Security</span>
+                    	<div class="toggle-switch active" id="mfaToggle">
+                        	<div class="toggle-slider"></div>
+                    	</div>
+                	</div>
+                	<div class="checkbox-list" id="mfaActions">
+                    	<label class="checkbox-item high">
+                        	<input type="checkbox" id="removeMFA" checked>
+                        	<span class="action-name">Remove MFA Methods</span>
+                    	</label>
+                	</div>
+            	</div>
 
 
-            <!-- Action Categories -->
-            <div class="actions-grid">
-                <!-- Active Directory Actions -->
-                <div class="action-category" data-category="ad">
-                    <div class="category-header">
-                        <span class="category-icon">🏢</span>
-                        <div class="category-info">
-                            <span class="category-title">Active Directory</span>
-                            <span class="category-subtitle">On-premises user account management</span>
-                        </div>
-                        <div class="category-toggle">
-                            <div class="toggle-switch active" id="adToggle" onclick="toggleCategory('ad')">
-                                <div class="toggle-slider"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="checkbox-list" id="adActions">
-                        <div class="checkbox-item critical">
-                            <input type="checkbox" id="disableAD" checked>
-                            <label for="disableAD">
-                                <span class="action-name">Disable Account</span>
-                                <span class="action-desc">Set userAccountControl to disabled state (critical)</span>
-                            </label>
-                        </div>
-                        <div class="checkbox-item critical">
-                            <input type="checkbox" id="expireAD" checked>
-                            <label for="expireAD">
-                                <span class="action-name">Set Expiration Date</span>
-                                <span class="action-desc">Set account expiration to yesterday (critical)</span>
-                            </label>
-                        </div>
-                        <div class="checkbox-item high">
-                            <input type="checkbox" id="resetADPassword" checked>
-                            <label for="resetADPassword">
-                                <span class="action-name">Reset Password</span>
-                                <span class="action-desc">Generate and set new random password</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
+            	<div class="action-category">
+                	<div class="category-header" onclick="toggleCategory('org')">
+                    	<span class="category-icon">📁</span>
+                    	<span class="category-title">Organizational</span>
+                    	<div class="toggle-switch active" id="orgToggle">
+                        	<div class="toggle-slider"></div>
+                    	</div>
+                	</div>
+                	<div class="checkbox-list" id="orgActions">
+                    	<label class="checkbox-item medium">
+                        	<input type="checkbox" id="moveToTerminated" checked>
+                        	<span class="action-name">Move to Terminated OU</span>
+                    	</label>
+                	</div>
+            	</div>
+        	</div>
 
 
-                <!-- Microsoft 365 Actions -->
-                <div class="action-category" data-category="m365">
-                    <div class="category-header">
-                        <span class="category-icon">☁️</span>
-                        <div class="category-info">
-                            <span class="category-title">Microsoft 365</span>
-                            <span class="category-subtitle">Cloud-based account and service management</span>
-                        </div>
-                        <div class="category-toggle">
-                            <div class="toggle-switch active" id="m365Toggle" onclick="toggleCategory('m365')">
-                                <div class="toggle-slider"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="checkbox-list" id="m365Actions">
-                        <div class="checkbox-item critical">
-                            <input type="checkbox" id="disableM365" checked>
-                            <label for="disableM365">
-                                <span class="action-name">Disable Account</span>
-                                <span class="action-desc">Set accountEnabled to false (critical)</span>
-                            </label>
-                        </div>
-                        <div class="checkbox-item high">
-                            <input type="checkbox" id="revokeSessions" checked>
-                            <label for="revokeSessions">
-                                <span class="action-name">Revoke Active Sessions</span>
-                                <span class="action-desc">Sign out user from all devices and applications</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- MFA & Security Actions -->
-                <div class="action-category" data-category="mfa">
-                    <div class="category-header">
-                        <span class="category-icon">🛡️</span>
-                        <div class="category-info">
-                            <span class="category-title">MFA & Security</span>
-                            <span class="category-subtitle">Multi-factor authentication and security cleanup</span>
-                        </div>
-                        <div class="category-toggle">
-                            <div class="toggle-switch active" id="mfaToggle" onclick="toggleCategory('mfa')">
-                                <div class="toggle-slider"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="checkbox-list" id="mfaActions">
-                        <div class="checkbox-item high">
-                            <input type="checkbox" id="removeMFA" checked>
-                            <label for="removeMFA">
-                                <span class="action-name">Remove All MFA Methods</span>
-                                <span class="action-desc">Remove phone, authenticator, and other MFA methods</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
+        	<!-- Action Buttons -->
+        	<div class="action-buttons">
+            	<button class="btn btn-test" onclick="testConnections()" id="testBtn">🔍 Test</button>
+            	<button class="btn btn-primary" onclick="startDeprovisioning()" id="deprovisionBtn">🚨 Deprovision</button>
+            	<button class="btn btn-secondary" onclick="clearLog()">🗑️ Clear</button>
+        	</div>
 
 
-                <!-- Organizational Actions -->
-                <div class="action-category" data-category="org">
-                    <div class="category-header">
-                        <span class="category-icon">📁</span>
-                        <div class="category-info">
-                            <span class="category-title">Organizational</span>
-                            <span class="category-subtitle">Organizational structure and metadata updates</span>
-                        </div>
-                        <div class="category-toggle">
-                            <div class="toggle-switch active" id="orgToggle" onclick="toggleCategory('org')">
-                                <div class="toggle-slider"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="checkbox-list" id="orgActions">
-                        <div class="checkbox-item medium">
-                            <input type="checkbox" id="moveToTerminated" checked>
-                            <label for="moveToTerminated">
-                                <span class="action-name">Move to Terminated OU</span>
-                                <span class="action-desc">Move AD object to Terminated Users organizational unit</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        	<!-- Progress -->
+        	<div class="progress-container">
+            	<div class="progress-bar">
+                	<div class="progress-fill" id="progressFill"></div>
+            	</div>
+            	<div class="progress-text" id="progressText">Ready</div>
+        	</div>
+    	</div>
 
 
-            <!-- Action Buttons -->
-            <div class="action-buttons">
-                <button class="btn btn-test" onclick="testConnections()" id="testBtn">
-                    🔍 Test Connections
-                </button>
-                <button class="btn btn-primary" onclick="startDeprovisioning()" id="deprovisionBtn" 
-                        {% if not config_status.is_configured %}disabled{% endif %}>
-                    🚨 Start Deprovisioning
-                </button>
-                <button class="btn btn-secondary" onclick="clearLog()">
-                    🗑️ Clear Log
-                </button>
-            </div>
+    	<!-- Log Section -->
+    	<div class="log-section">
+        	<div class="log-header">📋 Execution Log</div>
+        	<div id="logContainer" class="log-container"></div>
+    	</div>
+	</div>
 
 
-            <div class="progress-container">
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                <div class="progress-text" id="progressText">Ready to start</div>
-            </div>
-        </div>
+	<!-- Confirmation Modal -->
+	<div id="confirmationModal" class="modal" style="display:none;">
+    	<div class="modal-content">
+        	<div class="modal-header">
+            	<h2>🚨 CRITICAL WARNING</h2>
+        	</div>
+        	<div class="modal-body">
+            	<p>You are about to PERMANENTLY modify:</p>
+            	<div class="user-email" id="confirmUserEmail"></div>
+            	<div class="auth-details">
+                	<p>M365: OAuth ({{ config_status.user_email }})</p>
+                	<p>AD: <span id="confirmAdUser"></span></p>
+            	</div>
+            	<div class="warning-box">
+                	⚠️ These actions CANNOT be easily undone!
+            	</div>
+            	<p>Type "CONFIRM" to proceed:</p>
+            	<input type="text" id="confirmationInput" placeholder="Type CONFIRM here">
+        	</div>
+        	<div class="modal-footer">
+            	<button class="btn btn-secondary" onclick="closeConfirmation()">Cancel</button>
+            	<button class="btn btn-primary" onclick="proceedWithDeprovisioning()" id="proceedBtn" disabled>
+                	Proceed
+            	</button>
+        	</div>
+    	</div>
+	</div>
 
 
-        <div class="log-section">
-            <div class="log-header">
-                <span>📋</span> Execution Log
-            </div>
-            <div id="logContainer" class="log-container">
-                <div class="log-entry log-info">
-                    <span class="status-icon icon-info"></span>
-                    <span class="timestamp">[Ready]</span>
-                    <span class="message">System initialized. You'll need to authenticate with Microsoft 365 first, then enter your AD credentials.</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Confirmation Modal -->
-    <div id="confirmationModal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>🚨 CRITICAL WARNING</h2>
-            </div>
-            <div class="modal-body">
-                <p><strong>You are about to PERMANENTLY modify the account for:</strong></p>
-                <p class="user-email" id="confirmUserEmail"></p>
-                
-                <p><strong>Authentication Details:</strong></p>
-                <div class="auth-details">
-                    <p>📧 Microsoft 365: OAuth ({{ config_status.user_email }})</p>
-                    <p>🏢 Active Directory: <span id="confirmAdUser"></span></p>
-                </div>
-                
-                <div class="warning-box">
-                    <strong>⚠️ WARNING: These actions CANNOT be easily undone!</strong>
-                    <br>Ensure you have proper authorization before proceeding.
-                </div>
-                
-                <p><strong>Type "CONFIRM" to proceed:</strong></p>
-                <input type="text" id="confirmationInput" placeholder="Type CONFIRM here">
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeConfirmation()">Cancel</button>
-                <button class="btn btn-primary" onclick="proceedWithDeprovisioning()" id="proceedBtn" disabled>
-                    Proceed with Deprovisioning
-                </button>
-            </div>
-        </div>
-    </div>
-
-
-    <script>
-        // Simple JavaScript for the deprovisioning tool
-        class UserDeprovisioningApp {
-            constructor() {
-                this.isProcessing = false;
-                this.results = [];
-                this.currentPassword = null;
-                this.init();
-            }
-            
-            init() {
-                this.setupEventListeners();
-                this.validateForm();
-                this.addInitialLogEntry();
-            }
-            
-            setupEventListeners() {
-                const emailInput = document.getElementById('userEmail');
-                emailInput?.addEventListener('input', () => this.validateForm());
-                
-                // AD credentials  
-                const adUsername = document.getElementById('adUsername');
-                const adPassword = document.getElementById('adPassword');
-                adUsername?.addEventListener('input', () => this.validateForm());
-                adPassword?.addEventListener('input', () => this.validateForm());
-                
-                const confirmInput = document.getElementById('confirmationInput');
-                confirmInput?.addEventListener('input', () => this.validateConfirmation());
-                
-                document.addEventListener('keydown', (e) => this.handleKeyboard(e));
-                
-                // Clear password fields on page refresh for security
-                if (adPassword) adPassword.value = '';
-            }
-            
-            handleKeyboard(event) {
-                if (event.key === 'Escape') {
-                    this.closeConfirmation();
-                }
-                
-                if (event.ctrlKey && event.key === 'Enter') {
-                    if (!this.isProcessing && this.validateForm()) {
-                        this.startDeprovisioning();
-                    }
-                }
-                
-                if (event.ctrlKey && event.key === 't') {
-                    event.preventDefault();
-                    this.testConnections();
-                }
-            }
-            
-            addInitialLogEntry() {
-                const timestamp = new Date().toLocaleTimeString();
-                this.addLogEntry('System initialized with OAuth authentication. Enter AD credentials to begin testing.', 'info', timestamp);
-            }
-            
-            validateForm() {
-                const userEmail = document.getElementById('userEmail')?.value.trim();
-                const adUsername = document.getElementById('adUsername')?.value.trim();
-                const adPassword = document.getElementById('adPassword')?.value.trim();
-                const deprovisionBtn = document.getElementById('deprovisionBtn');
-                const testBtn = document.getElementById('testBtn');
-                
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                const isEmailValid = userEmail && emailRegex.test(userEmail);
-                const areAdCredsValid = adUsername && adPassword && adUsername.length > 0 && adPassword.length > 0;
-                
-                // Update visual feedback
-                const emailInput = document.getElementById('userEmail');
-                const adUsernameInput = document.getElementById('adUsername');
-                const adPasswordInput = document.getElementById('adPassword');
-                
-                if (emailInput) {
-                    emailInput.style.borderColor = isEmailValid ? '#27ae60' : 
-                        (userEmail ? '#e74c3c' : '#e0e6ed');
-                }
-                
-                if (adUsernameInput) {
-                    adUsernameInput.style.borderColor = adUsername ? '#27ae60' : '#e0e6ed';
-                }
-                
-                if (adPasswordInput) {
-                    adPasswordInput.style.borderColor = adPassword ? '#27ae60' : '#e0e6ed';
-                }
-                
-                // Enable/disable buttons (M365 auth is handled via OAuth, so just need AD creds)
-                const isFormValid = isEmailValid && areAdCredsValid;
-                
-                if (deprovisionBtn) {
-                    deprovisionBtn.disabled = !isFormValid || this.isProcessing;
-                }
-                
-                if (testBtn) {
-                    testBtn.disabled = !areAdCredsValid || this.isProcessing;
-                }
-                
-                return isFormValid;
-            }
-            
-            validateConfirmation() {
-                const confirmInput = document.getElementById('confirmationInput');
-                const proceedBtn = document.getElementById('proceedBtn');
-                
-                if (confirmInput && proceedBtn) {
-                    const isValid = confirmInput.value.toUpperCase() === 'CONFIRM';
-                    proceedBtn.disabled = !isValid;
-                    
-                    if (isValid) {
-                        proceedBtn.style.background = 'linear-gradient(135deg, #27ae60, #229954)';
-                    } else {
-                        proceedBtn.style.background = '#95a5a6';
-                    }
-                }
-            }
-            
-            addLogEntry(message, type = 'info', timestamp = null) {
-                const logContainer = document.getElementById('logContainer');
-                if (!logContainer) return;
-                
-                const entry = document.createElement('div');
-                const logTimestamp = timestamp || new Date().toLocaleTimeString();
-                
-                entry.className = `log-entry log-${type}`;
-                entry.innerHTML = `
-                    <span class="status-icon icon-${type}"></span>
-                    <span class="timestamp">[${logTimestamp}]</span>
-                    <span class="message">${this.escapeHtml(message)}</span>
-                `;
-                
-                logContainer.appendChild(entry);
-                logContainer.scrollTop = logContainer.scrollHeight;
-                
-                this.results.push({
-                    timestamp: logTimestamp,
-                    type: type,
-                    message: message
-                });
-            }
-            
-            escapeHtml(text) {
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
-            }
-            
-            updateProgress(percentage, text = null) {
-                const progressFill = document.getElementById('progressFill');
-                const progressText = document.getElementById('progressText');
-                
-                if (progressFill) {
-                    progressFill.style.width = percentage + '%';
-                }
-                
-                if (progressText && text) {
-                    progressText.textContent = text;
-                }
-            }
-            
-            toggleCategory(category) {
-                const toggle = document.getElementById(`${category}Toggle`);
-                const actions = document.getElementById(`${category}Actions`);
-                
-                if (!toggle || !actions) return;
-                
-                toggle.classList.toggle('active');
-                actions.classList.toggle('disabled');
-                
-                if (actions.classList.contains('disabled')) {
-                    const checkboxes = actions.querySelectorAll('input[type="checkbox"]');
-                    checkboxes.forEach(checkbox => checkbox.checked = false);
-                    this.addLogEntry(`${category.toUpperCase()} actions disabled`, 'info');
-                } else {
-                    this.addLogEntry(`${category.toUpperCase()} actions enabled`, 'info');
-                }
-                
-                this.validateForm();
-            }
-            
-            getSelectedActions() {
-                const actions = {};
-                const categories = ['ad', 'm365', 'mfa', 'org'];
-                
-                categories.forEach(category => {
-                    const categoryActions = document.getElementById(`${category}Actions`);
-                    const isEnabled = categoryActions && !categoryActions.classList.contains('disabled');
-                    
-                    actions[`${category}Actions`] = isEnabled;
-                    
-                    if (isEnabled) {
-                        const checkboxes = categoryActions.querySelectorAll('input[type="checkbox"]');
-                        checkboxes.forEach(checkbox => {
-                            actions[checkbox.id] = checkbox.checked;
-                        });
-                    }
-                });
-                
-                return actions;
-            }
-            
-            getAllCredentials() {
-                return {
-                    adUsername: document.getElementById('adUsername')?.value.trim() || '',
-                    adPassword: document.getElementById('adPassword')?.value.trim() || ''
-                };
-            }
-            
-            async testConnections() {
-                if (this.isProcessing) return;
-                
-                const creds = this.getAllCredentials();
-                if (!creds.adUsername || !creds.adPassword) {
-                    this.addLogEntry('❌ Please enter AD credentials before testing connections', 'error');
-                    return;
-                }
-                
-                const testBtn = document.getElementById('testBtn');
-                if (!testBtn) return;
-                
-                const originalText = testBtn.textContent;
-                testBtn.disabled = true;
-                testBtn.textContent = '🔄 Testing...';
-                
-                this.addLogEntry('Starting connection tests (M365 via OAuth, AD via credentials)...', 'info');
-                this.updateProgress(10, 'Testing connections...');
-                
-                try {
-                    const response = await fetch('/test-connections', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(creds)
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (response.status === 401) {
-                        this.addLogEntry('❌ Microsoft 365 session expired. Please refresh and log in again.', 'error');
-                        setTimeout(() => window.location.reload(), 2000);
-                        return;
-                    }
-                    
-                    if (response.ok) {
-                        this.updateProgress(100, 'Tests completed');
-                        
-                        // Update status indicators
-                        document.getElementById('graphStatus').textContent = 
-                            data.graph ? '✅ OAuth token valid' : '❌ OAuth token expired';
-                        document.getElementById('adStatus').textContent = 
-                            data.ad ? '✅ Connected successfully' : '❌ Authentication failed';
-                        document.getElementById('serviceStatus').textContent = 
-                            data.service ? '✅ All systems ready' : '❌ Some systems unavailable';
-                        document.getElementById('ouStatus').textContent = 
-                            data.ou ? '✅ OU accessible' : '❌ OU not found';
-                        
-                        // Show any additional messages from the server
-                        if (data.messages) {
-                            data.messages.forEach(msg => {
-                                this.addLogEntry(msg.message, msg.status);
-                            });
-                        }
-                        
-                        const successCount = Object.values(data).filter(Boolean).length;
-                        const totalTests = 5; // graph, ad, service, ou
-                        
-                        this.addLogEntry(
-                            `Connection tests completed: ${successCount}/${totalTests} successful`,
-                            successCount === totalTests ? 'success' : 'warning'
-                        );
-                        
-                        if (data.graph && data.ad) {
-                            this.addLogEntry(`✅ Both M365 OAuth and AD credentials are valid`, 'success');
-                        } else {
-                            if (!data.graph) this.addLogEntry(`❌ Microsoft 365 OAuth token issue`, 'error');
-                            if (!data.ad) this.addLogEntry(`❌ Active Directory authentication failed`, 'error');
-                        }
-                        
-                    } else {
-                        this.addLogEntry(`Connection test failed: ${data.error}`, 'error');
-                        this.updateProgress(0, 'Test failed');
-                    }
-                } catch (error) {
-                    this.addLogEntry(`Connection error: ${error.message}`, 'error');
-                    this.updateProgress(0, 'Test failed');
-                }
-                
-                setTimeout(() => {
-                    testBtn.disabled = false;
-                    testBtn.textContent = originalText;
-                    this.updateProgress(0, 'Ready');
-                }, 2000);
-            }
-            
-            startDeprovisioning() {
-                if (this.isProcessing || !this.validateForm()) return;
-                
-                const userEmail = document.getElementById('userEmail').value.trim();
-                const creds = this.getAllCredentials();
-                
-                // Show confirmation modal
-                const modal = document.getElementById('confirmationModal');
-                const confirmEmail = document.getElementById('confirmUserEmail');
-                const confirmM365User = document.getElementById('confirmM365User');
-                const confirmAdUser = document.getElementById('confirmAdUser');
-                const confirmInput = document.getElementById('confirmationInput');
-                
-                if (modal && confirmEmail && confirmAdUser && confirmInput) {
-                    confirmEmail.textContent = userEmail;
-                    confirmAdUser.textContent = creds.adUsername;
-                    confirmInput.value = '';
-                    modal.style.display = 'flex';
-                    confirmInput.focus();
-                    this.validateConfirmation();
-                }
-            }
-            
-            closeConfirmation() {
-                const modal = document.getElementById('confirmationModal');
-                if (modal) {
-                    modal.style.display = 'none';
-                }
-            }
-            
-            async proceedWithDeprovisioning() {
-                const userEmail = document.getElementById('userEmail').value.trim();
-                const actions = this.getSelectedActions();
-                const creds = this.getAllCredentials();
-                
-                this.closeConfirmation();
-                
-                this.isProcessing = true;
-                const deprovisionBtn = document.getElementById('deprovisionBtn');
-                const testBtn = document.getElementById('testBtn');
-                
-                if (deprovisionBtn) {
-                    deprovisionBtn.disabled = true;
-                    deprovisionBtn.textContent = '🔄 Processing...';
-                }
-                
-                if (testBtn) {
-                    testBtn.disabled = true;
-                }
-                
-                this.updateProgress(5, 'Starting...');
-                this.addLogEntry(`🚨 DEPROVISIONING STARTED for: ${userEmail}`, 'warning');
-                this.addLogEntry(`Using AD credentials: ${creds.adUsername}`, 'info');
-                
-                try {
-                    const response = await fetch('/deprovision', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            userEmail: userEmail,
-                            actions: actions,
-                            ...creds
-                        })
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (response.ok && data.results) {
-                        await this.processResults(data.results, data.password);
-                    } else {
-                        this.addLogEntry(`❌ Process failed: ${data.error}`, 'error');
-                        this.updateProgress(0, 'Failed');
-                    }
-                    
-                } catch (error) {
-                    this.addLogEntry(`❌ Network error: ${error.message}`, 'error');
-                    this.updateProgress(0, 'Error');
-                }
-                
-                setTimeout(() => {
-                    this.isProcessing = false;
-                    if (deprovisionBtn) {
-                        deprovisionBtn.disabled = false;
-                        deprovisionBtn.textContent = '🚨 Start Deprovisioning';
-                    }
-                    if (testBtn) {
-                        testBtn.disabled = false;
-                    }
-                    this.validateForm();
-                }, 3000);
-            }
-            
-            async processResults(results, password) {
-                let successCount = 0;
-                const totalCount = results.length;
-                
-                for (let i = 0; i < results.length; i++) {
-                    const result = results[i];
-                    
-                    await this.sleep(300);
-                    
-                    this.addLogEntry(result.message, result.status);
-                    
-                    if (result.status === 'success') {
-                        successCount++;
-                    }
-                    
-                    const progress = ((i + 1) / totalCount) * 90;
-                    this.updateProgress(progress, `Processing... ${i + 1}/${totalCount}`);
-                }
-                
-                await this.sleep(500);
-                this.updateProgress(100, 'Completed');
-                
-                const completionMessage = `🎉 Process completed! ${successCount}/${totalCount} actions successful`;
-                this.addLogEntry(completionMessage, successCount === totalCount ? 'success' : 'warning');
-                
-                if (password) {
-                    await this.sleep(800);
-                    this.displayPassword(password);
-                }
-            }
-            
-            displayPassword(password) {
-                const logContainer = document.getElementById('logContainer');
-                if (!logContainer) return;
-                
-                const passwordDiv = document.createElement('div');
-                passwordDiv.className = 'password-output';
-                passwordDiv.innerHTML = `
-                    <div class="password-label">🔐 Generated Password (SAVE IMMEDIATELY):</div>
-                    <div class="password-value">${password}</div>
-                    <div style="margin-top: 15px; font-size: 0.9em; color: #95a5a6;">
-                        ⚠️ This password excludes the user's first and last name.<br>
-                        📋 Copy this password now - it will not be shown again!<br>
-                        🔐 Store securely according to your organization's password policy.
-                    </div>
-                    <button onclick="app.copyPassword('${password}')" 
-                            style="margin-top: 15px; padding: 10px 20px; background: #27ae60; 
-                                   color: white; border: none; border-radius: 6px; cursor: pointer;
-                                   font-weight: bold;">
-                        📋 Copy to Clipboard
-                    </button>
-                `;
-                
-                logContainer.appendChild(passwordDiv);
-                logContainer.scrollTop = logContainer.scrollHeight;
-                
-                this.currentPassword = password;
-                this.addLogEntry('✅ Password generated and displayed above - copy immediately!', 'success');
-            }
-            
-            async copyPassword(password) {
-                try {
-                    await navigator.clipboard.writeText(password);
-                    this.addLogEntry('📋 Password copied to clipboard successfully', 'success');
-                    
-                    // Provide visual feedback
-                    const copyBtn = event.target;
-                    const originalText = copyBtn.textContent;
-                    copyBtn.textContent = '✅ Copied!';
-                    copyBtn.style.background = '#27ae60';
-                    
-                    setTimeout(() => {
-                        copyBtn.textContent = originalText;
-                        copyBtn.style.background = '#27ae60';
-                    }, 2000);
-                    
-                } catch (err) {
-                    // Fallback for older browsers
-                    try {
-                        const textarea = document.createElement('textarea');
-                        textarea.value = password;
-                        document.body.appendChild(textarea);
-                        textarea.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(textarea);
-                        
-                        this.addLogEntry('📋 Password copied to clipboard (fallback method)', 'success');
-                    } catch (fallbackErr) {
-                        this.addLogEntry('❌ Failed to copy password to clipboard', 'error');
-                        this.addLogEntry('💡 Please manually select and copy the password above', 'info');
-                    }
-                }
-            }
-            
-            clearLog() {
-                const logContainer = document.getElementById('logContainer');
-                if (!logContainer) return;
-                
-                logContainer.innerHTML = '';
-                this.results = [];
-                this.currentPassword = null;
-                
-                this.updateProgress(0, 'Ready');
-                this.addLogEntry('Log cleared. System ready for new operations.', 'info');
-            }
-            
-            async sleep(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
-        }
-
-
-        // Global functions for HTML onclick handlers
-        let app;
-
-
-        function toggleCategory(category) {
-            app?.toggleCategory(category);
-        }
-
-
-        function testConnections() {
-            app?.testConnections();
-        }
-
-
-        function startDeprovisioning() {
-            app?.startDeprovisioning();
-        }
-
-
-        function clearLog() {
-            app?.clearLog();
-        }
-
-
-        function closeConfirmation() {
-            app?.closeConfirmation();
-        }
-
-
-        function proceedWithDeprovisioning() {
-            app?.proceedWithDeprovisioning();
-        }
-
-
-        // Initialize the app when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            app = new UserDeprovisioningApp();
-            
-            // Auto-populate test email if none present
-            const emailInput = document.getElementById('userEmail');
-            if (emailInput && !emailInput.value.trim()) {
-                emailInput.value = 'First.Last@domain.com';
-                app.validateForm();
-            }
-            
-            console.log('🔒 User Deprovisioning Tool v2.1 initialized');
-            console.log('⌨️ Keyboard shortcuts: Esc (close modal), Ctrl+T (test), Ctrl+Enter (start)');
-        });
-
-
-        // Security: Clear sensitive data on page unload
-        window.addEventListener('beforeunload', function(event) {
-            const m365Password = document.getElementById('m365Password');
-            const adPassword = document.getElementById('adPassword');
-            if (m365Password) m365Password.value = '';
-            if (adPassword) adPassword.value = '';
-            
-            if (app?.isProcessing) {
-                event.preventDefault();
-                event.returnValue = 'Deprovisioning is in progress. Are you sure you want to leave?';
-                return event.returnValue;
-            }
-        });
-    </script>
+	<script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
 
